@@ -55,7 +55,6 @@ public class Moniter implements Runnable {
                         this.curBooter = this.booterStack.pop() ;
                         break;
                 }
-
             }
 
             try {

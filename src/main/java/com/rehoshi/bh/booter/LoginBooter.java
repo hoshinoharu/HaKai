@@ -13,7 +13,7 @@ public class LoginBooter extends BhBooter<LoginRecognizer> {
             RecogResult clickToLogin = getBhRecognizer().findClickToLogin();
             if (clickToLogin.isFinded()) {
                 System.out.println("点击登录");
-                getDriver().click(clickToLogin.getInSense()) ;
+                getDriver().click(clickToLogin.getInSense());
                 return true;
             }
         } catch (Exception e) {
@@ -22,13 +22,13 @@ public class LoginBooter extends BhBooter<LoginRecognizer> {
         return false;
     }
 
-
     public int recognizeFrame() {
-        return super.recognizeFrame();
+        super.recognizeFrame();
+        return RecognizeStatus.TO_NEXT_SENSE;
     }
 
     public Booter getNextBooter() {
-        return super.getNextBooter();
+        return new HomeBotter();
     }
 
 }
