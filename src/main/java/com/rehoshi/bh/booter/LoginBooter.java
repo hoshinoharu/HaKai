@@ -11,7 +11,7 @@ public class LoginBooter extends BhBooter<LoginRecognizer> {
     public boolean recognizeSense() {
         try {
             RecogResult clickToLogin = getBhRecognizer().findClickToLogin();
-            if (clickToLogin.isFinded()) {
+            if (clickToLogin.isFound()) {
                 System.out.println("点击登录");
                 getDriver().click(clickToLogin.getInSense());
                 return true;
@@ -28,7 +28,7 @@ public class LoginBooter extends BhBooter<LoginRecognizer> {
     }
 
     public Booter getNextBooter() {
-        return new HomeBotter();
+        return new HomeBooter();
     }
 
 }

@@ -2,6 +2,7 @@ package com.rehoshi.bh.booter;
 
 public interface Booter {
     interface RecognizeStatus{
+        int NOT_INTERCEPT = -1 ;
         //去上一个场景
         int TO_PRE_SENSE = 0 ;
 
@@ -23,6 +24,12 @@ public interface Booter {
      * 只做场景识别用于初始化操作
      */
     boolean recognizeSense() ;
+
+    /**
+     * 拦截识别
+     * @return
+     */
+    int interceptRecognize() ;
 
     /**
      * 识别当前帧

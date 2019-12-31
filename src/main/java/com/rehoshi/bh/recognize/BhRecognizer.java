@@ -12,6 +12,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.*;
+import java.net.URL;
 
 public class BhRecognizer implements Recognizer {
 
@@ -53,7 +54,7 @@ public class BhRecognizer implements Recognizer {
 
         BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
         try {
-            ImageIO.write(image, "png", new FileOutputStream("C:\\Users\\hoshi\\Desktop\\Out\\" + System.currentTimeMillis() +".png")) ;
+            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() +".png")) ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,12 +64,29 @@ public class BhRecognizer implements Recognizer {
     public Rectangle2D.Double findInScreen(String imgInRes) {
         File screenAsFile = this.bhDriver.getScreenAsFile();
         String screenPath = screenAsFile.getAbsolutePath();
-        String targetPath = Resource.class.getResource(imgInRes).getPath().replaceFirst("/", "");
+        if(!imgInRes.startsWith("/")){
+            imgInRes = "/" + imgInRes ;
+        }
+        URL resource = Resource.class.getResource(imgInRes);
+        String targetPath = resource.getPath().replaceFirst("/", "");
         Rectangle2D.Double in = findIn(targetPath, screenPath);
-        screenAsFile.delete() ;
+        System.out.println("find in screen " + in);
         return in ;
     }
 
+    public RecogResult findTaskConfirm(){
+        Rectangle2D.Double inScreen = findInScreen("/imgs/dialog/task_confirm.png");
+        return new RecogResult(365, 333, inScreen) ;
+    }
+
+    public RecogResult findError(){
+        Rectangle2D.Double inScreen = findInScreen("/imgs/dialog/dialog_error.png");
+        return new RecogResult(210, 121, inScreen)
+                .desc("游戏报错")
+                .intentRect(new Rectangle2D.Double(558, 365, 20, 20))//继续游戏
+//                .intentRect(new Rectangle2D.Double(296, 363, 20, 20))//退出按钮
+                ;
+    }
 
     public static Mat inputStream2Mat(InputStream inputStream) throws IOException {
         BufferedInputStream is = new BufferedInputStream(inputStream);
@@ -98,6 +116,4 @@ public class BhRecognizer implements Recognizer {
         template.put(0, 0, data);
         return template;
     }
-
-
 }

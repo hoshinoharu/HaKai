@@ -15,6 +15,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BhDriver{
+    /**
+     * 一帧中的屏幕截图
+     */
+    private File screenInFrame ;
     private AndroidDriver driver;
     public BhDriver() throws MalformedURLException {
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
@@ -37,9 +41,29 @@ public class BhDriver{
         return driver;
     }
 
+    /**
+     * 一帧的开始
+     * 可以在这里作一次帧分析的缓存初始化操作
+     */
+    public void startFrame(){
+        this.screenInFrame = null ;
+    }
+
+    /**
+     * 一帧的结束
+     * 释放资源
+     */
+    public void endFrame(){
+        if(this.screenInFrame != null){
+            this.screenInFrame.delete() ;
+        }
+    }
 
     public File getScreenAsFile(){
-        return getDriver().getScreenshotAs(OutputType.FILE) ;
+        if(screenInFrame == null){
+            screenInFrame = getDriver().getScreenshotAs(OutputType.FILE) ;
+        }
+        return screenInFrame ;
     }
 
     public boolean click(Rectangle2D.Double rect){

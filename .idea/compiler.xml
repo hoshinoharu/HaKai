@@ -11,4 +11,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="HaKai" options="-extdirs D:\HaruGit\HaKai/libs" />
+    </option>
+  </component>
 </project>
