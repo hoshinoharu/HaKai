@@ -33,19 +33,20 @@ public class BhRecognizer implements Recognizer {
         int height = templete.rows() - demo.rows() + 1;
         // 3 创建32位模板匹配结果Mat
         Mat result = new Mat(width, height, CvType.CV_32FC1);
-        int method = Imgproc.TM_SQDIFF_NORMED;
+        int method = Imgproc.TM_CCOEFF_NORMED;
         // 4 调用 模板匹配函数
         Imgproc.matchTemplate(templete, demo, result, method);
         // 5 归一化
         Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
         // 6 获取模板匹配结果
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
+        System.out.println("识别结果 " + mmr.minVal + " " + mmr.maxVal);
         // 7 绘制匹配到的结果
         double x, y;
         if (method == Imgproc.TM_SQDIFF_NORMED || method == Imgproc.TM_SQDIFF) {
             x = mmr.minLoc.x;
             y = mmr.minLoc.y;
-        } else {
+        } else { 
             x = mmr.maxLoc.x;
             y = mmr.maxLoc.y;
         }

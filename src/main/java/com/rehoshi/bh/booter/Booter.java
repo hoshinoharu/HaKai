@@ -2,7 +2,9 @@ package com.rehoshi.bh.booter;
 
 public interface Booter {
     interface RecognizeStatus{
+
         int NOT_INTERCEPT = -1 ;
+
         //去上一个场景
         int TO_PRE_SENSE = 0 ;
 
@@ -11,6 +13,9 @@ public interface Booter {
 
         //去下一个场景
         int TO_NEXT_SENSE = 2 ;
+
+        int NO_ACTION = 1001 ;
+
     }
 
     /**

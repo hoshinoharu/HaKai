@@ -40,29 +40,29 @@ public class Moniter implements Runnable {
                 }
             }
 
-            if (first) {
-                //识别成功则表示初始化完成
-                first = !curBooter.recognizeSense();
-            } else {
+            //拦截识别方法 做一些提前处理
+            int status = curBooter.interceptRecognize();
 
-                //拦截识别方法 做一些提前处理
-                int status = curBooter.interceptRecognize();
-
-                if (status == Booter.RecognizeStatus.NOT_INTERCEPT) {
+            if (status == Booter.RecognizeStatus.NOT_INTERCEPT) {
+                if (first) {
+                    //识别成功则表示初始化完成
+                    first = !curBooter.recognizeSense();
+                    status = Booter.RecognizeStatus.NO_ACTION;
+                } else {
                     //识别每一帧
                     status = curBooter.recognizeFrame();
                 }
+            }
 
-                switch (status) {
-                    case Booter.RecognizeStatus.STAY_CUR_SENSE:
-                        break;
-                    case Booter.RecognizeStatus.TO_NEXT_SENSE:
-                        this.curBooter = this.curBooter.getNextBooter();
-                        break;
-                    case Booter.RecognizeStatus.TO_PRE_SENSE:
-                        this.curBooter = this.booterStack.pop();
-                        break;
-                }
+            switch (status) {
+                case Booter.RecognizeStatus.STAY_CUR_SENSE:
+                    break;
+                case Booter.RecognizeStatus.TO_NEXT_SENSE:
+                    this.curBooter = this.curBooter.getNextBooter();
+                    break;
+                case Booter.RecognizeStatus.TO_PRE_SENSE:
+                    this.curBooter = this.booterStack.pop();
+                    break;
             }
             this.bhDriver.endFrame();
             try {
