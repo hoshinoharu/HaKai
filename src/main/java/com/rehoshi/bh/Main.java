@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Moniter moniter = new Moniter(new LoginBooter());
         moniter.start();
-//                templete(Imgproc.TM_SQDIFF_NORMED);
+//                templete(Imgproc.TM_CCOEFF_NORMED);
     }
 
     /**
@@ -36,9 +36,10 @@ public class Main {
     public static void templete(int method) {
 
         // 1 获取待匹配图片
-        Mat templete=Imgcodecs.imread("C:\\Users\\hoshi\\AppData\\Local\\Temp\\screenshot644258232281270519.png");
+        Mat templete=Imgcodecs.imread("D:\\HoshiTemp\\screenshot18254847361867441.png");
         // 2 获取匹配模板
-        Mat demo=Imgcodecs.imread("H:\\HaruGit\\HaKai\\src\\main\\resources\\imgs\\login\\change_account.PNG");
+//        Mat demo=Imgcodecs.imread("D:\\HakiOut\\task_confirm.PNG");
+        Mat demo=Imgcodecs.imread("D:\\HakiOut\\1577778831347.png");
         int width=templete.cols()-demo.cols()+1;
         int height=templete.rows()-demo.rows()+1;
         // 3 创建32位模板匹配结果Mat
