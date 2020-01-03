@@ -22,7 +22,9 @@ public class HomeRecognizer extends BhRecognizer {
 
     public RecogResult findVersionHot(){
         Rectangle2D.Double inScreen = findInScreen("/imgs/home/version_hot.PNG");
-        return new RecogResult(420, 485,inScreen).desc("版本热点");
+        return new RecogResult(420, 485,inScreen)
+                .intentRect(new Rectangle2D.Double(914, 22, 10, 10))
+                .desc("版本热点");
     }
 
     public RecogResult findActivityGetBtn(){
