@@ -1,7 +1,7 @@
 package com.rehoshi.bh.booter;
 
 import com.rehoshi.bh.recognize.LoginRecognizer;
-import com.rehoshi.bh.recognize.RecogResult;
+import com.rehoshi.bh.booter.domain.RecognizeResult;
 
 public class LoginBooter extends BhBooter<LoginRecognizer> {
 
@@ -10,7 +10,7 @@ public class LoginBooter extends BhBooter<LoginRecognizer> {
 
     public boolean recognizeSense() {
         try {
-            RecogResult clickToLogin = getBhRecognizer().findClickToLogin();
+            RecognizeResult clickToLogin = getBhRecognizer().findClickToLogin();
             if (clickToLogin.isFound()) {
                 System.out.println("点击登录");
                 getDriver().click(clickToLogin.getInSense());

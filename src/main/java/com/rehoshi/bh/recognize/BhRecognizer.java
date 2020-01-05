@@ -1,6 +1,8 @@
 package com.rehoshi.bh.recognize;
 
 import com.rehoshi.bh.booter.BhDriver;
+import com.rehoshi.bh.booter.domain.MatchRect;
+import com.rehoshi.bh.booter.domain.RecognizeResult;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -8,7 +10,6 @@ import org.opencv.imgproc.Imgproc;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.*;
@@ -22,7 +23,7 @@ public class BhRecognizer implements Recognizer {
         this.bhDriver = driver;
     }
 
-    public Rectangle2D.Double findIn(String target, String sense) {
+    public MatchRect findIn(String target, String sense) {
         // 1 获取待匹配图片
         Mat templete;
         templete = Imgcodecs.imread(sense);
@@ -59,10 +60,10 @@ public class BhRecognizer implements Recognizer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new Rectangle2D.Double(x, y, demo.width(), demo.height());
+        return new MatchRect(x, y, demo.width(), demo.height()).minVal(mmr.minVal);
     }
 
-    public Rectangle2D.Double findInScreen(String imgInRes) {
+    public MatchRect findInScreen(String imgInRes) {
         File screenAsFile = this.bhDriver.getScreenAsFile();
         String screenPath = screenAsFile.getAbsolutePath();
         if(!imgInRes.startsWith("/")){
@@ -70,23 +71,28 @@ public class BhRecognizer implements Recognizer {
         }
         URL resource = Resource.class.getResource(imgInRes);
         String targetPath = resource.getPath().replaceFirst("/", "");
-        Rectangle2D.Double in = findIn(targetPath, screenPath);
-        System.out.println("find in screen " + in);
+        MatchRect in = findIn(targetPath, screenPath);
         return in ;
     }
 
-    public RecogResult findTaskConfirm(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/dialog/task_confirm.png");
-        return new RecogResult(365, 333, inScreen) ;
+    public RecognizeResult findTaskConfirm(){
+        MatchRect inScreen = findInScreen("/imgs/dialog/task_confirm.png");
+        return new RecognizeResult(365, 333, inScreen).desc("任务完成") ;
     }
 
-    public RecogResult findError(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/dialog/dialog_error.png");
-        return new RecogResult(210, 121, inScreen)
+    public RecognizeResult findError(){
+        MatchRect inScreen = findInScreen("/imgs/dialog/dialog_error.png");
+        return new RecognizeResult(210, 121, inScreen)
                 .desc("游戏报错")
-                .intentRect(new Rectangle2D.Double(558, 365, 20, 20))//继续游戏
+                .intentRect(new MatchRect(558, 365, 20, 20))//继续游戏
 //                .intentRect(new Rectangle2D.Double(296, 363, 20, 20))//退出按钮
                 ;
+    }
+
+    public RecognizeResult findBackHome(){
+        return $().targetX(117).targetY(9)
+                .desc("返回主菜单")
+                .inSense(findInScreen("imgs/home/home_back_btn.png"));
     }
 
     public static Mat inputStream2Mat(InputStream inputStream) throws IOException {
@@ -117,4 +123,9 @@ public class BhRecognizer implements Recognizer {
         template.put(0, 0, data);
         return template;
     }
+
+    protected RecognizeResult $(){
+        return new RecognizeResult() ;
+    }
+
 }

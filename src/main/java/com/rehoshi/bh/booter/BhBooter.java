@@ -1,18 +1,21 @@
 package com.rehoshi.bh.booter;
 
+import com.rehoshi.bh.booter.domain.RecognizeResult;
 import com.rehoshi.bh.recognize.BhRecognizer;
-import com.rehoshi.bh.recognize.RecogResult;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;
-import java.util.function.Function;
+import java.util.Comparator;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     private BhDriver driver;
 
     private R bhRecognizer;
+
+    private Booter nextBooter ;
 
     public void bindDriver(BhDriver driver) {
         this.driver = driver;
@@ -44,18 +47,39 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
         return getBhRecognizer() ;
     }
 
+    protected RecognizeResult $h(Supplier<RecognizeResult>... supplier){
+        return handleAllRecognizers(supplier) ;
+    }
+
+    protected Supplier<RecognizeResult> $s_h(Supplier<RecognizeResult>... supplier){
+        return () -> $s(supplier);
+    }
+
+
+    /**找到所有识别结果中最匹配的结果
+     * @param supplier
+     * @return
+     */
+    protected RecognizeResult $s(Supplier<RecognizeResult>... supplier){
+        RecognizeResult recognizeResult = Stream.of(supplier)
+                .map(Supplier::get)
+                .sorted(Comparator.comparing(RecognizeResult::getMatchMinVal))
+                .findFirst().orElse(null);
+        return recognizeResult ;
+    }
+
     /**
      * 拦截解析
      * @return
      */
     @Override
     public int interceptRecognize(){
-        RecogResult recogResult = handleAllRecognizers(
+        RecognizeResult recognizeResult = handleAllRecognizers(
                 $()::findError //识别错误对话框
         );
-        if(recogResult.isFound()){
+        if(recognizeResult.isFound()){
             //点击默认意图 继续游戏
-            getDriver().click(recogResult.getIntentRect()) ;
+            getDriver().click(recognizeResult.getIntentRect()) ;
             return RecognizeStatus.STAY_CUR_SENSE ;
         }else {
             return RecognizeStatus.NOT_INTERCEPT ;
@@ -68,19 +92,27 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
     }
 
     public Booter getNextBooter() {
-        return null;
+        return nextBooter;
     }
 
+    public void setNextBooter(Booter nextBooter) {
+        this.nextBooter = nextBooter;
+    }
 
-    public RecogResult handleAllRecognizers(Supplier<RecogResult>... recognizers){
-        RecogResult recogResult = null;
-        for (Supplier<RecogResult> recog : recognizers){
-            recogResult = recog.get();
-            if(recogResult.isFound()){
+    public RecognizeResult handleAllRecognizers(Supplier<RecognizeResult>... recognizers){
+        RecognizeResult recognizeResult = null;
+        for (Supplier<RecognizeResult> recog : recognizers){
+            recognizeResult = recog.get();
+            if(recognizeResult.isFound()){
                 break;
             }
         }
-        return recogResult ;
+        return recognizeResult;
+    }
+
+    protected int toNextSense(Booter booter){
+        setNextBooter(booter);
+        return RecognizeStatus.TO_NEXT_SENSE ;
     }
 
 }

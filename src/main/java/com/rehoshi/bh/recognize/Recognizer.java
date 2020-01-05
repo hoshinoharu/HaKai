@@ -1,8 +1,8 @@
 package com.rehoshi.bh.recognize;
 
-import java.awt.geom.Rectangle2D;
+import com.rehoshi.bh.booter.domain.MatchRect;
 
-public interface Recognizer {
+public interface  Recognizer {
 
     /**
      * 在场景中查找目标图片位置
@@ -10,5 +10,5 @@ public interface Recognizer {
      * @param sense
      * @return
      */
-    Rectangle2D.Double findIn(String target, String sense) ;
+    MatchRect findIn(String target, String sense) ;
 }

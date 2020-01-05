@@ -1,55 +1,67 @@
 package com.rehoshi.bh.recognize;
 
-import java.awt.geom.Rectangle2D;
+import com.rehoshi.bh.booter.domain.MatchRect;
+import com.rehoshi.bh.booter.domain.RecognizeResult;
 
 public class HomeRecognizer extends BhRecognizer {
 
-    public RecogResult findStaminaPotion(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/home/stamina_potion.PNG");
+    public RecognizeResult findStaminaPotion(){
         double x = 439 ;
         double y = 4 ;
-        return new RecogResult(x, y, inScreen) ;
+        return new RecognizeResult(x, y, findInScreen("/imgs/home/stamina_potion.PNG")).desc("体力药剂") ;
     }
 
-    public RecogResult findAnnouncement(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/home/notice.PNG");
+    public RecognizeResult findAnnouncement(){
         double x = 488 ;
         double y = 34 ;
-        return new RecogResult(x, y, inScreen)
+        return new RecognizeResult(x, y, findInScreen("/imgs/home/notice.PNG"))
                 .desc("游戏公告")
-                .intentRect(new Rectangle2D.Double(875, 55, 10, 10)) ;
+                .intentRect(new MatchRect(875, 55, 10, 10)) ;
     }
 
-    public RecogResult findVersionHot(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/home/version_hot.PNG");
-        return new RecogResult(420, 485,inScreen)
-                .intentRect(new Rectangle2D.Double(914, 22, 10, 10))
+    public RecognizeResult findHintAnnouncement(){
+        double x = 486 ;
+        double y = 36 ;
+        return new RecognizeResult(x, y, findInScreen("/imgs/home/notice_hint.png"))
+                .desc("游戏公告")
+                .intentRect(new MatchRect(875, 55, 10, 10)) ;
+    }
+
+    public RecognizeResult findVersionHot(){
+        return new RecognizeResult(420, 485,findInScreen("/imgs/home/version_hot.PNG"))
+                .intentRect(new MatchRect(914, 22, 10, 10))
                 .desc("版本热点");
     }
 
-    public RecogResult findActivityGetBtn(){
-        Rectangle2D.Double inScreen = findInScreen("/imgs/home/activity_get_btn.PNG");
-        return new RecogResult(450, 472,inScreen).desc("活动领取按钮") ;
+    public RecognizeResult findActivityGetBtn(){
+        return new RecognizeResult(450, 472,findInScreen("/imgs/home/activity_get_btn.PNG")).desc("活动领取按钮") ;
     }
 
-    public RecogResult findSingInGetBtn(){
-        Rectangle2D.Double inScreen = findInScreen("imgs/home/sing_in_get_btn.png");
-        return new RecogResult(472, 488,inScreen).desc("签到领取按钮") ;
+    public RecognizeResult findSingInGetBtn(){
+        return new RecognizeResult(472, 488,findInScreen("imgs/home/sing_in_get_btn.png")).desc("签到领取按钮") ;
     }
 
-    public RecogResult findSingInRewardConfirm(){
-        return  new RecogResult()
+    public RecognizeResult findSingInRewardConfirm(){
+        return  new RecognizeResult()
                 .targetX(364)
                 .targetY(337)
                 .inSense(findInScreen("/imgs/home/sing_in_reward_confirm.png"))
                 .desc("签到奖励");
     }
 
-    public RecogResult findMoonCard(){
-        return  new RecogResult()
+    public RecognizeResult findMonthCard(){
+        return  new RecognizeResult()
                 .targetX(449)
                 .targetY(470)
                 .inSense(findInScreen("/imgs/home/moon_card_get.png"))
                 .desc("领取月卡");
+    }
+
+    public RecognizeResult findTaskHint(){
+        return  new RecognizeResult()
+                .targetX(8)
+                .targetY(63)
+                .inSense(findInScreen("/imgs/home/task_hint.png"))
+                .desc("每日任务");
     }
 }
