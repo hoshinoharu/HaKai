@@ -1,7 +1,8 @@
 package com.rehoshi.bh.recognize.task;
 
+import com.rehoshi.bh.auto.HakaiId;
 import com.rehoshi.bh.recognize.BhRecognizer;
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.domain.RecognizeResult;
 
 public class TaskRecognizer extends BhRecognizer {
 
@@ -10,6 +11,7 @@ public class TaskRecognizer extends BhRecognizer {
         return super.$().foundThreshold(2);//设置默认的精度为误差为2
     }
 
+    @HakaiId
     public RecognizeResult findDailyTaskActive(){//查找每日任务激活按钮
         return $().targetX(0)
                 .targetY(130)
@@ -17,6 +19,7 @@ public class TaskRecognizer extends BhRecognizer {
                 .desc("每日任务");
     }
 
+    @HakaiId
     public RecognizeResult findDailyTaskTap(){//查找每日任务点击按钮
         return $().targetX(0)
                 .targetY(131)

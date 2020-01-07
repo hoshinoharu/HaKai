@@ -1,15 +1,16 @@
 package com.rehoshi.bh.booter;
 
+import com.rehoshi.bh.booter.homeland.HomeLandBooter;
 import com.rehoshi.bh.booter.task.TaskBooter;
 import com.rehoshi.bh.recognize.HomeRecognizer;
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.domain.RecognizeResult;
 
 public class HomeBooter extends BhBooter<HomeRecognizer> {
 
     private static boolean findCover = false;
 
     //请求封面超时时间
-    private final static long coverTimeOut = 20 * 1000 ;
+    private final static long coverTimeOut = 5 * 1000 ;
 
     private long startTime = -1 ;
 
@@ -41,11 +42,16 @@ public class HomeBooter extends BhBooter<HomeRecognizer> {
 
     @Override
     public int recognizeFrame() {
-        RecognizeResult taskHint = $().findTaskHint();
-        if(taskHint.isFound()){
-            getDriver().click(taskHint.getIntentRect()) ;
-            System.out.println("点击每日任务");
-            return toNextSense(new TaskBooter()) ;
+        RecognizeResult result = $h($()::findHomeLandBtn
+                , $()::findTaskHint);
+        if(result.isFound()){
+            getDriver().click(result.getIntentRect()) ;
+            System.out.println(result.getDesc());
+            switch (result.getDesc()){
+                case "家园按钮":return toNextSense(new HomeLandBooter()) ;
+                case "每日任务":
+                    return toNextSense(new TaskBooter()) ;
+            }
         }else {
 
         }

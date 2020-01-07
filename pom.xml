@@ -22,16 +22,27 @@
             <version>4.4.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.rehoshi</groupId>
+            <artifactId>bh.auto</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
+                    <annotationProcessors>
+                        <annotationProcessor>com.rehoshi.bh.auto.BhProcessor</annotationProcessor>
+                    </annotationProcessors>
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                     <compilerArguments>
+                        <AaddGeneratedAnnotation>true</AaddGeneratedAnnotation>
+                        <Adebug>true</Adebug>
                         <extdirs>${project.basedir}/libs</extdirs>
                     </compilerArguments>
                 </configuration>

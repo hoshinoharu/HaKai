@@ -1,6 +1,7 @@
 package com.rehoshi.bh.booter;
 
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.domain.RecognizeResult;
+import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.BhRecognizer;
 
 import java.io.File;
@@ -87,7 +88,6 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
     }
 
     public int recognizeFrame() {
-        System.out.println("分析当前帧");
         return RecognizeStatus.STAY_CUR_SENSE;
     }
 
@@ -115,4 +115,14 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
         return RecognizeStatus.TO_NEXT_SENSE ;
     }
 
+    protected int toNextSense(RecognizeResult result, Booter booter){
+        //模拟点击
+        getDriver().click(result.getIntentRect()) ;
+        return toNextSense(booter) ;
+    }
+
+    public void back(){
+        //默认点击左上角返回按钮
+        getDriver().click(new Rect(0, 8, 90, 38)) ;
+    }
 }

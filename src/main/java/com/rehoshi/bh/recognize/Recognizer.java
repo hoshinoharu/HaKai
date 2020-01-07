@@ -1,6 +1,6 @@
 package com.rehoshi.bh.recognize;
 
-import com.rehoshi.bh.booter.domain.MatchRect;
+import com.rehoshi.bh.domain.MatchResult;
 
 public interface  Recognizer {
 
@@ -10,5 +10,5 @@ public interface  Recognizer {
      * @param sense
      * @return
      */
-    MatchRect findIn(String target, String sense) ;
+    MatchResult findIn(String target, String sense) ;
 }

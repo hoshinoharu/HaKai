@@ -1,10 +1,21 @@
 package com.rehoshi.bh.recognize;
 
-import com.rehoshi.bh.booter.domain.MatchRect;
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.auto.HakaiId;
+import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.domain.RecognizeResult;
 
 public class HomeRecognizer extends BhRecognizer {
 
+    @HakaiId
+    public RecognizeResult findHomeLandBtn(){
+        return $().targetX(728)
+                .targetY(482)
+                .foundThreshold(2)
+                .inSense(findInScreen("imgs/home/land/home_land_btn.png"))
+                .desc("家园按钮") ;
+    }
+
+    @HakaiId
     public RecognizeResult findStaminaPotion(){
         double x = 439 ;
         double y = 4 ;
@@ -16,7 +27,7 @@ public class HomeRecognizer extends BhRecognizer {
         double y = 34 ;
         return new RecognizeResult(x, y, findInScreen("/imgs/home/notice.PNG"))
                 .desc("游戏公告")
-                .intentRect(new MatchRect(875, 55, 10, 10)) ;
+                .intentRect(new Rect(875, 55, 10, 10)) ;
     }
 
     public RecognizeResult findHintAnnouncement(){
@@ -24,12 +35,12 @@ public class HomeRecognizer extends BhRecognizer {
         double y = 36 ;
         return new RecognizeResult(x, y, findInScreen("/imgs/home/notice_hint.png"))
                 .desc("游戏公告")
-                .intentRect(new MatchRect(875, 55, 10, 10)) ;
+                .intentRect(new Rect(875, 55, 10, 10)) ;
     }
 
     public RecognizeResult findVersionHot(){
         return new RecognizeResult(420, 485,findInScreen("/imgs/home/version_hot.PNG"))
-                .intentRect(new MatchRect(914, 22, 10, 10))
+                .intentRect(new Rect(914, 22, 10, 10))
                 .desc("版本热点");
     }
 

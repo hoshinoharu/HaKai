@@ -1,22 +1,97 @@
 package com.rehoshi.bh;
 
-import com.rehoshi.bh.booter.LoginBooter;
-import com.rehoshi.bh.booter.Moniter;
+import com.rehoshi.bh.auto.Hakai;
+import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.orc.Ocer;
 import org.opencv.core.*;
+import org.opencv.core.Point;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import javax.annotation.Resource;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class Main {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
     public static void main(String[] args) throws IOException {
-        Moniter moniter = new Moniter(new LoginBooter());
-        moniter.start();
+//        Moniter moniter = new Moniter(new LoginBooter());
+//        moniter.start();
 //                templete(Imgproc.TM_CCOEFF_NORMED);
+//        threshold();
+    }
+
+    static void threshold(){
+        Mat mat = Imgcodecs.imread("D:\\HakiOut\\1578295224982.png") ;
+        Mat src = new Mat() ;
+        Imgproc.cvtColor(mat, src, Imgproc.COLOR_RGB2GRAY);
+        Mat target = new Mat();
+        // 二值化处理
+        Imgproc.threshold(src, target, 0, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);//灰度图像二值化
+        // 保存二值化后图片
+        Imgcodecs.imwrite("D:/b160_2.png", target);
+        Imgproc.adaptiveThreshold(src, target, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 5, 0);
+        // 保存二值化后图片
+        Imgcodecs.imwrite("D:/threshold.png", target);
+        Mat bitwise = new Mat() ;
+        Core.bitwise_not(target, bitwise);
+        Imgcodecs.imwrite("D:/bitwise.png", bitwise);
+        String ocr = Ocer.getInstance().ocrChiness(src, new Rect(498, 18, 75, 19));
+        System.out.println(ocr);
+    }
+
+    static void testOcr(){
+        Mat mat = Imgcodecs.imread("D:\\HakiOut\\1578295224982.png") ;
+        Mat sense = new Mat() ;
+        Imgproc.cvtColor(mat, sense, Imgproc.COLOR_RGB2GRAY);
+        int cols = sense.cols();
+        int rows = sense.rows();
+        byte[] bytes = new byte[cols * rows] ;
+        sense.get(0, 0, bytes) ;
+        String ocr = Ocer.getInstance().ocr(ByteBuffer.wrap(bytes), cols, rows, new Rectangle(440, 122, 93, 41));
+        System.out.println("ocr结果 " + ocr);
+//        boolean matches = ocr.replaceAll("\\s", "").matches(".*?" + text + ".*?");
+    }
+
+    private static int colorToRGB(int alpha, int red, int green, int blue) {
+        int newPixel = 0;
+        newPixel += alpha;
+        newPixel = newPixel << 8;
+        newPixel += red;
+        newPixel = newPixel << 8;
+        newPixel += green;
+        newPixel = newPixel << 8;
+        newPixel += blue;
+        return newPixel;
+    }
+    public static BufferedImage graify(String src) throws IOException {
+        BufferedImage bufferedImage
+                = ImageIO.read(new File(src));
+        BufferedImage grayImage =
+                new BufferedImage(bufferedImage.getWidth(),
+                        bufferedImage.getHeight(),
+                        bufferedImage.getType());
+        for (int i = 0; i < bufferedImage.getWidth(); i++) {
+            for (int j = 0; j < bufferedImage.getHeight(); j++) {
+                final int color = bufferedImage.getRGB(i, j);
+                final int r = (color >> 16) & 0xff;
+                final int g = (color >> 8) & 0xff;
+                final int b = color & 0xff;
+                int gray = (int) (0.3 * r + 0.59 * g + 0.11 * b);;
+                int newPixel = colorToRGB(255, gray, gray, gray);
+                grayImage.setRGB(i, j, newPixel);
+            }
+        }
+        return grayImage ;
     }
 
     /**

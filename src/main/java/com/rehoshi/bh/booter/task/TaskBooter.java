@@ -1,7 +1,7 @@
 package com.rehoshi.bh.booter.task;
 
 import com.rehoshi.bh.booter.BhBooter;
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.recognize.task.TaskRecognizer;
 
 public class TaskBooter extends BhBooter<TaskRecognizer> {

@@ -11,16 +11,37 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
-public class BhDriver{
+public class BhDriver {
     /**
      * 一帧中的屏幕截图
      */
-    private File screenInFrame ;
+    private File screenInFrame;
     private AndroidDriver driver;
-    public BhDriver() throws MalformedURLException {
+
+    public BhDriver() throws IOException, InterruptedException {
+
+        //开启appium
+        Runtime.getRuntime().exec("appium.cmd -a localhost").waitFor();
+        //开启adb
+        Runtime.getRuntime().exec("adb devices").waitFor();
+
+        new Thread(() -> {
+            //打开 nox模拟器
+            Runtime runtime = Runtime.getRuntime();
+            Process exec = null;
+            try {
+                exec = runtime.exec("nox.exe");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
         desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "127.0.0.1:62001"); //
         desiredCapabilities.setCapability("platformName", "Android");
@@ -45,31 +66,31 @@ public class BhDriver{
      * 一帧的开始
      * 可以在这里作一次帧分析的缓存初始化操作
      */
-    public void startFrame(){
-        this.screenInFrame = null ;
+    public void startFrame() {
+        this.screenInFrame = null;
     }
 
     /**
      * 一帧的结束
      * 释放资源
      */
-    public void endFrame(){
-        if(this.screenInFrame != null){
-            this.screenInFrame.delete() ;
+    public void endFrame() {
+        if (this.screenInFrame != null) {
+            this.screenInFrame.delete();
         }
     }
 
-    public File getScreenAsFile(){
-        if(screenInFrame == null){
-            screenInFrame = getDriver().getScreenshotAs(OutputType.FILE) ;
+    public File getScreenAsFile() {
+        if (screenInFrame == null) {
+            screenInFrame = getDriver().getScreenshotAs(OutputType.FILE);
         }
-        return screenInFrame ;
+        return screenInFrame;
     }
 
-    public boolean click(Rectangle2D.Double rect){
-        TouchAction touchAction = new AndroidTouchAction(getDriver()) ;
-        touchAction.tap(PointOption.point(new Point((int)(rect.x + rect.width / 2), (int)(rect.y + rect.height / 2)))).release().perform();
-        return true ;
+    public boolean click(Rectangle2D.Double rect) {
+        TouchAction touchAction = new AndroidTouchAction(getDriver());
+        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2)))).release().perform();
+        return true;
     }
 
 }

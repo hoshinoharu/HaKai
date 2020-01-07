@@ -1,8 +1,10 @@
 package com.rehoshi.bh.recognize;
 
+import com.rehoshi.bh.auto.HakaiId;
 import com.rehoshi.bh.booter.BhDriver;
-import com.rehoshi.bh.booter.domain.MatchRect;
-import com.rehoshi.bh.booter.domain.RecognizeResult;
+import com.rehoshi.bh.domain.MatchResult;
+import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.domain.RecognizeResult;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -23,7 +25,11 @@ public class BhRecognizer implements Recognizer {
         this.bhDriver = driver;
     }
 
-    public MatchRect findIn(String target, String sense) {
+    public MatchResult findIn(String target, String sense) {
+        return findIn(target, sense, "Match Success");
+    }
+
+    public MatchResult findIn(String target, String sense, String tag) {
         // 1 获取待匹配图片
         Mat templete;
         templete = Imgcodecs.imread(sense);
@@ -34,62 +40,74 @@ public class BhRecognizer implements Recognizer {
         int height = templete.rows() - demo.rows() + 1;
         // 3 创建32位模板匹配结果Mat
         Mat result = new Mat(width, height, CvType.CV_32FC1);
-        int method = Imgproc.TM_CCOEFF_NORMED;
+        int method = Imgproc.TM_SQDIFF_NORMED;
         // 4 调用 模板匹配函数
         Imgproc.matchTemplate(templete, demo, result, method);
         // 5 归一化
         Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
         // 6 获取模板匹配结果
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
-        System.out.println("识别结果 " + mmr.minVal + " " + mmr.maxVal);
+        System.out.println("识别结果 " + tag + " " + Math.abs(0 - mmr.minVal));
         // 7 绘制匹配到的结果
         double x, y;
         if (method == Imgproc.TM_SQDIFF_NORMED || method == Imgproc.TM_SQDIFF) {
             x = mmr.minLoc.x;
             y = mmr.minLoc.y;
-        } else { 
+        } else {
             x = mmr.maxLoc.x;
             y = mmr.maxLoc.y;
         }
-        Imgproc.rectangle(templete,new Point(x,y),new Point(x+demo.cols(),y+demo.rows()),new Scalar( 0, 0, 255),2,Imgproc.LINE_AA);
-        Imgproc.putText(templete,"Match Success",new Point(x,y),Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0),1,Imgproc.LINE_AA);
+        Imgproc.rectangle(templete, new Point(x, y), new Point(x + demo.cols(), y + demo.rows()), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
+        Imgproc.putText(templete, tag, new Point(x, y), Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0), 1, Imgproc.LINE_AA);
 
         BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
         try {
-            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() +".png")) ;
+            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() + ".png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new MatchRect(x, y, demo.width(), demo.height()).minVal(mmr.minVal);
+        Rect rect = new Rect(x, y, demo.width(), demo.height());
+        MatchResult matchResult = new MatchResult();
+        matchResult.setMatchRect(rect);
+        matchResult.setSense(templete);
+        matchResult.setTarget(demo);
+        matchResult.setMinVal(mmr.minVal);
+        return matchResult;
     }
 
-    public MatchRect findInScreen(String imgInRes) {
+    public MatchResult findInScreen(String imgInRes) {
+        return findInScreen(imgInRes, "");
+    }
+
+    public MatchResult findInScreen(String imgInRes, String info) {
         File screenAsFile = this.bhDriver.getScreenAsFile();
         String screenPath = screenAsFile.getAbsolutePath();
-        if(!imgInRes.startsWith("/")){
-            imgInRes = "/" + imgInRes ;
+        if (!imgInRes.startsWith("/")) {
+            imgInRes = "/" + imgInRes;
         }
         URL resource = Resource.class.getResource(imgInRes);
         String targetPath = resource.getPath().replaceFirst("/", "");
-        MatchRect in = findIn(targetPath, screenPath);
-        return in ;
+        MatchResult in = findIn(targetPath, screenPath, info);
+        return in;
     }
 
-    public RecognizeResult findTaskConfirm(){
-        MatchRect inScreen = findInScreen("/imgs/dialog/task_confirm.png");
-        return new RecognizeResult(365, 333, inScreen).desc("任务完成") ;
+    @HakaiId
+    public RecognizeResult findTaskConfirm() {
+        MatchResult inScreen = findInScreen("/imgs/dialog/task_confirm.png");
+        return new RecognizeResult(365, 333, inScreen).desc("任务完成");
     }
 
-    public RecognizeResult findError(){
-        MatchRect inScreen = findInScreen("/imgs/dialog/dialog_error.png");
+    @HakaiId
+    public RecognizeResult findError() {
+        MatchResult inScreen = findInScreen("/imgs/dialog/dialog_error.png");
         return new RecognizeResult(210, 121, inScreen)
                 .desc("游戏报错")
-                .intentRect(new MatchRect(558, 365, 20, 20))//继续游戏
+                .intentRect(new Rect(558, 365, 20, 20))//继续游戏
 //                .intentRect(new Rectangle2D.Double(296, 363, 20, 20))//退出按钮
                 ;
     }
 
-    public RecognizeResult findBackHome(){
+    public RecognizeResult findBackHome() {
         return $().targetX(117).targetY(9)
                 .desc("返回主菜单")
                 .inSense(findInScreen("imgs/home/home_back_btn.png"));
@@ -124,7 +142,11 @@ public class BhRecognizer implements Recognizer {
         return template;
     }
 
-    protected RecognizeResult $(){
+    protected RecognizeResult $() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        System.out.println(stackTrace[stackTrace.length - 1].getMethodName());
+        System.out.println(stackTrace[stackTrace.length - 2].getMethodName());
+        System.out.println(stackTrace[stackTrace.length - 3].getMethodName());
         return new RecognizeResult() ;
     }
 
