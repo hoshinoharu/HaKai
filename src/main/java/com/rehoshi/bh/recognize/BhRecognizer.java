@@ -1,7 +1,9 @@
 package com.rehoshi.bh.recognize;
 
+import com.rehoshi.bh.auto.Hakai;
 import com.rehoshi.bh.auto.HakaiId;
 import com.rehoshi.bh.booter.BhDriver;
+import com.rehoshi.bh.checker.RecognizeChecker;
 import com.rehoshi.bh.domain.MatchResult;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.domain.RecognizeResult;
@@ -15,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URL;
 
 public class BhRecognizer implements Recognizer {
@@ -47,7 +50,7 @@ public class BhRecognizer implements Recognizer {
         Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
         // 6 获取模板匹配结果
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
-        System.out.println("识别结果 " + tag + " " + Math.abs(0 - mmr.minVal));
+//        System.out.println("识别结果 " + tag + " " + Math.abs(0 - mmr.minVal));
         // 7 绘制匹配到的结果
         double x, y;
         if (method == Imgproc.TM_SQDIFF_NORMED || method == Imgproc.TM_SQDIFF) {
@@ -94,7 +97,10 @@ public class BhRecognizer implements Recognizer {
     @HakaiId
     public RecognizeResult findTaskConfirm() {
         MatchResult inScreen = findInScreen("/imgs/dialog/task_confirm.png");
-        return new RecognizeResult(365, 333, inScreen).desc("任务完成");
+        return $().targetX(365).targetY(333)
+                .inSense(inScreen)
+                .checker(RecognizeChecker.X_ONLY)
+                .desc("任务完成");
     }
 
     @HakaiId
@@ -107,6 +113,7 @@ public class BhRecognizer implements Recognizer {
                 ;
     }
 
+    @HakaiId
     public RecognizeResult findBackHome() {
         return $().targetX(117).targetY(9)
                 .desc("返回主菜单")
@@ -144,10 +151,32 @@ public class BhRecognizer implements Recognizer {
 
     protected RecognizeResult $() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        System.out.println(stackTrace[stackTrace.length - 1].getMethodName());
-        System.out.println(stackTrace[stackTrace.length - 2].getMethodName());
-        System.out.println(stackTrace[stackTrace.length - 3].getMethodName());
-        return new RecognizeResult() ;
+        boolean findHakaiId = false;
+        String className = null;
+        String methodName = null;
+        for (int i = 1; i < stackTrace.length && !findHakaiId; i++) {
+            StackTraceElement element = stackTrace[i];
+            methodName = element.getMethodName();
+            if (!"$".equals(methodName)) {
+                findHakaiId = true;
+                String[] split = element.getClassName().split("\\.");
+                //获取简单类名
+                className = split[split.length - 1];
+            }
+        }
+
+        RecognizeResult result = new RecognizeResult();
+        if (findHakaiId) {
+            String cls = Hakai.Id.class.getName();
+            String idCls = cls + "$" + className;
+            try {
+                Class<?> aClass = Class.forName(idCls);
+                Field declaredField = aClass.getDeclaredField(methodName);
+                Object o = declaredField.get(aClass);
+                result.id((Integer) o) ;
+            } catch (Exception ignore) { }
+        }
+        return result;
     }
 
 }

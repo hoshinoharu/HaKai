@@ -7,7 +7,7 @@ public class Moniter implements Runnable {
 
     private BhDriver bhDriver;
     private boolean first = true;
-    private boolean bootSuccess = false ;
+    private boolean bootSuccess = false;
     private Stack<Booter> booterStack = new Stack<Booter>();
     private Booter curBooter;
 
@@ -27,7 +27,7 @@ public class Moniter implements Runnable {
                 e.printStackTrace();
             }
         }
-        if(bootSuccess) {
+        if (bootSuccess) {
             while (true) {
                 this.bhDriver.startFrame();
                 if (booterStack.isEmpty()) {
@@ -43,6 +43,7 @@ public class Moniter implements Runnable {
                     }
                 }
 
+                System.out.println("当前Booter： " + curBooter.getClass());
                 //拦截识别方法 做一些提前处理
                 int status = curBooter.interceptRecognize();
 
@@ -64,7 +65,9 @@ public class Moniter implements Runnable {
                         this.curBooter = this.curBooter.getNextBooter();
                         break;
                     case Booter.RecognizeStatus.TO_PRE_SENSE:
-                        this.curBooter = this.booterStack.pop();
+                        //弹出当前booter
+                        this.booterStack.pop();
+                        this.curBooter = this.booterStack.peek();
                         break;
                 }
                 this.bhDriver.endFrame();
@@ -74,7 +77,7 @@ public class Moniter implements Runnable {
                     e.printStackTrace();
                 }
             }
-        }else {
+        } else {
             //重新启动
             this.run();
         }

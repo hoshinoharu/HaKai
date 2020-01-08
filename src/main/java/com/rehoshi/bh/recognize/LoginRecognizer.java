@@ -4,6 +4,7 @@ import com.rehoshi.bh.auto.HakaiId;
 import com.rehoshi.bh.domain.RecognizeResult;
 
 public class LoginRecognizer extends BhRecognizer {
+    @HakaiId
     public RecognizeResult findClickToLogin() {
         double x = 365;
         double y = 376;

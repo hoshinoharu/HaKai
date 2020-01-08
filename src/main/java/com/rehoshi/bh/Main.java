@@ -1,6 +1,8 @@
 package com.rehoshi.bh;
 
 import com.rehoshi.bh.auto.Hakai;
+import com.rehoshi.bh.booter.LoginBooter;
+import com.rehoshi.bh.booter.Moniter;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.orc.Ocer;
 import org.opencv.core.*;
@@ -24,10 +26,8 @@ public class Main {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
     public static void main(String[] args) throws IOException {
-//        Moniter moniter = new Moniter(new LoginBooter());
-//        moniter.start();
-//                templete(Imgproc.TM_CCOEFF_NORMED);
-//        threshold();
+        Moniter moniter = new Moniter(new LoginBooter());
+        moniter.start();
     }
 
     static void threshold(){

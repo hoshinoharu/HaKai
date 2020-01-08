@@ -1,18 +1,28 @@
 package com.rehoshi.bh.booter.homeland;
 
+import com.rehoshi.bh.auto.Hakai;
 import com.rehoshi.bh.booter.BhBooter;
+import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.homeland.HomeWelfareRecognizer;
 
 public class HomeWelfareBooter extends BhBooter<HomeWelfareRecognizer> {
     @Override
     public boolean recognizeSense() {
-        return false;
+        return true;
     }
 
     @Override
     public int recognizeFrame() {
-        return super.recognizeFrame();
+        RecognizeResult result = $h($()::findStaminaGetBtn, $()::findGoldGetBtn);
+        if(result.isFound()){
+            handleClickIntent(result);
+            if(result.getId() == Hakai.Id.HomeWelfareRecognizer.findStaminaGetBtn){
+                return toNextSense(new HomeStaminaBooter()) ;
+            }
+            return super.recognizeFrame() ;
+        }
+        return toBack();
     }
 
     @Override

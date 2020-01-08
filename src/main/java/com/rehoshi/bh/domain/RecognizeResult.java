@@ -4,6 +4,8 @@ package com.rehoshi.bh.domain;
 import com.rehoshi.bh.checker.RecognizeChecker;
 
 public class RecognizeResult {
+    //识别结果ID
+    private Integer id;
     private String desc;
     private Boolean found;
     private Double targetX;
@@ -11,10 +13,10 @@ public class RecognizeResult {
     private MatchResult inSense;
     private Rect intentRect;
     private double foundThreshold = 10;
-    private RecognizeChecker checker ;
-    private Double matchMinVal ;
+    private RecognizeChecker checker;
+    private Double matchMinVal;
 
-    public RecognizeResult(){
+    public RecognizeResult() {
 
     }
 
@@ -73,6 +75,7 @@ public class RecognizeResult {
 
     public RecognizeResult desc(String desc) {
         setDesc(desc);
+        System.out.println("识别区域{"+desc+"}:" + inSense.getMatchRect());
         return this;
     }
 
@@ -89,35 +92,36 @@ public class RecognizeResult {
         return this;
     }
 
-    public RecognizeResult targetY(double targetY){
+    public RecognizeResult targetY(double targetY) {
         setTargetY(targetY);
-        return this ;
+        return this;
     }
 
     public void setInSense(MatchResult inSense) {
         this.inSense = inSense;
-        matchMinVal(inSense.getMinVal()) ;
+        matchMinVal(inSense.getMinVal());
     }
-    public RecognizeResult inSense(MatchResult inSense){
+
+    public RecognizeResult inSense(MatchResult inSense) {
         setInSense(inSense);
         return this;
     }
 
     public RecognizeResult foundThreshold(double foundThreshold) {
         this.foundThreshold = foundThreshold;
-        return this ;
+        return this;
     }
 
     public RecognizeChecker getChecker() {
-        if(checker == null){
-            checker = RecognizeChecker.DEFAULT_CHECKER ;
+        if (checker == null) {
+            checker = RecognizeChecker.DEFAULT_CHECKER;
         }
         return checker;
     }
 
     public RecognizeResult checker(RecognizeChecker checker) {
         this.checker = checker;
-        return this ;
+        return this;
     }
 
     public double getFoundThreshold() {
@@ -130,6 +134,15 @@ public class RecognizeResult {
 
     public RecognizeResult matchMinVal(Double matchMinVal) {
         this.matchMinVal = matchMinVal;
-        return this ;
+        return this;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public RecognizeResult id(Integer id) {
+        this.id = id;
+        return this;
     }
 }

@@ -3,6 +3,7 @@ package com.rehoshi.bh.booter;
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.BhRecognizer;
+import sun.java2d.pipe.hw.AccelTypedVolatileImage;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;
@@ -16,7 +17,7 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     private R bhRecognizer;
 
-    private Booter nextBooter ;
+    private Booter nextBooter;
 
     public void bindDriver(BhDriver driver) {
         this.driver = driver;
@@ -44,46 +45,49 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
         return bhRecognizer;
     }
 
-    protected R $(){
-        return getBhRecognizer() ;
+    protected R $() {
+        return getBhRecognizer();
     }
 
-    protected RecognizeResult $h(Supplier<RecognizeResult>... supplier){
-        return handleAllRecognizers(supplier) ;
+    protected RecognizeResult $h(Supplier<RecognizeResult>... supplier) {
+        return handleAllRecognizers(supplier);
     }
 
-    protected Supplier<RecognizeResult> $s_h(Supplier<RecognizeResult>... supplier){
+    protected Supplier<RecognizeResult> $s_h(Supplier<RecognizeResult>... supplier) {
         return () -> $s(supplier);
     }
 
 
-    /**找到所有识别结果中最匹配的结果
+    /**
+     * 找到所有识别结果中最匹配的结果
+     *
      * @param supplier
      * @return
      */
-    protected RecognizeResult $s(Supplier<RecognizeResult>... supplier){
+    protected RecognizeResult $s(Supplier<RecognizeResult>... supplier) {
         RecognizeResult recognizeResult = Stream.of(supplier)
                 .map(Supplier::get)
                 .sorted(Comparator.comparing(RecognizeResult::getMatchMinVal))
                 .findFirst().orElse(null);
-        return recognizeResult ;
+        return recognizeResult;
     }
 
     /**
      * 拦截解析
+     *
      * @return
      */
     @Override
-    public int interceptRecognize(){
+    public int interceptRecognize() {
         RecognizeResult recognizeResult = handleAllRecognizers(
                 $()::findError //识别错误对话框
         );
-        if(recognizeResult.isFound()){
+        if (recognizeResult.isFound()) {
             //点击默认意图 继续游戏
-            getDriver().click(recognizeResult.getIntentRect()) ;
-            return RecognizeStatus.STAY_CUR_SENSE ;
-        }else {
-            return RecognizeStatus.NOT_INTERCEPT ;
+            getDriver().click(recognizeResult.getIntentRect());
+            return RecognizeStatus.STAY_CUR_SENSE;
+        } else {
+            return RecognizeStatus.NOT_INTERCEPT;
         }
     }
 
@@ -99,30 +103,38 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
         this.nextBooter = nextBooter;
     }
 
-    public RecognizeResult handleAllRecognizers(Supplier<RecognizeResult>... recognizers){
+    public RecognizeResult handleAllRecognizers(Supplier<RecognizeResult>... recognizers) {
         RecognizeResult recognizeResult = null;
-        for (Supplier<RecognizeResult> recog : recognizers){
+        for (Supplier<RecognizeResult> recog : recognizers) {
             recognizeResult = recog.get();
-            if(recognizeResult.isFound()){
+            if (recognizeResult.isFound()) {
                 break;
             }
         }
         return recognizeResult;
     }
 
-    protected int toNextSense(Booter booter){
+    protected int toNextSense(Booter booter) {
         setNextBooter(booter);
-        return RecognizeStatus.TO_NEXT_SENSE ;
+        return RecognizeStatus.TO_NEXT_SENSE;
     }
 
-    protected int toNextSense(RecognizeResult result, Booter booter){
-        //模拟点击
-        getDriver().click(result.getIntentRect()) ;
-        return toNextSense(booter) ;
+    protected int toNextSense(RecognizeResult result, Booter booter) {
+        handleClickIntent(result);
+        return toNextSense(booter);
     }
 
-    public void back(){
+    public int toBack() {
+        back();
+        return RecognizeStatus.TO_PRE_SENSE;
+    }
+
+    public void back() {
         //默认点击左上角返回按钮
-        getDriver().click(new Rect(0, 8, 90, 38)) ;
+        getDriver().click(new Rect(0, 8, 90, 38));
+    }
+
+    public void handleClickIntent(RecognizeResult result) {
+        getDriver().click(result.getIntentRect());
     }
 }
