@@ -23,9 +23,6 @@ public class HomeLandBooter extends BhBooter<HomeLandRecognizer> {
                 case Hakai.Id.HomeLandRecognizer.findStorySweep:
                     return toNextSense(result, new HomeStoryBooter()) ;
             }
-            if(result.getId() == Hakai.Id.HomeLandRecognizer.findStorySweep){
-                return toNextSense(result, new HomeStoryBooter()) ;
-            }
         }
         return super.recognizeFrame();
     }

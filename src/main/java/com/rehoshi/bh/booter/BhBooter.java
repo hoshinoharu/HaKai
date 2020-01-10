@@ -3,7 +3,6 @@ package com.rehoshi.bh.booter;
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.BhRecognizer;
-import sun.java2d.pipe.hw.AccelTypedVolatileImage;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;

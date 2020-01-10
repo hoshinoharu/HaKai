@@ -18,6 +18,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
@@ -25,10 +27,12 @@ public class Main {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Moniter moniter = new Moniter(new LoginBooter());
         moniter.start();
     }
+
+
 
     static void threshold(){
         Mat mat = Imgcodecs.imread("D:\\HakiOut\\1578295224982.png") ;

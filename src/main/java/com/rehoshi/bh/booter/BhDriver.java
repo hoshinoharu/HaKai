@@ -1,5 +1,6 @@
 package com.rehoshi.bh.booter;
 
+import com.rehoshi.bh.log.Log;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
@@ -26,16 +27,22 @@ public class BhDriver {
 
     public BhDriver() throws IOException, InterruptedException {
 
+        System.out.println("启动appium");
         //开启appium
-        Runtime.getRuntime().exec("appium.cmd -a localhost").waitFor();
+        Process appium = Runtime.getRuntime().exec("appium.cmd -a localhost");
+        Log.log(appium);
+        System.out.println("appium启动完成");
         //开启adb
-        Runtime.getRuntime().exec("adb devices").waitFor();
-
+        System.out.println("启动abd");
+        Process adb = Runtime.getRuntime().exec("adb devices");
+        Log.log(adb);
+        System.out.println("adb启动完成");
         new Thread(() -> {
             //打开 nox模拟器
             Runtime runtime = Runtime.getRuntime();
             Process exec = null;
             try {
+                System.out.println("启动nox");
                 exec = runtime.exec("nox.exe");
             } catch (IOException e) {
                 e.printStackTrace();

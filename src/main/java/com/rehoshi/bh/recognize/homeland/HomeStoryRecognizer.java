@@ -17,4 +17,26 @@ public class HomeStoryRecognizer extends StrictRecognizer {
                 .inSense(findInScreen("imgs/story/finish_btn.png"))
                 .desc("完成按钮") ;
     }
+
+    @HakaiId
+    public RecognizeResult findStartBtn(){
+        return $().targetX(655)
+                .checker(RecognizeChecker.X_ONLY)
+                .inSense(findInScreen("imgs/story/start_btn.png"))
+                .desc("开始按钮") ;
+    }
+
+    @HakaiId
+    public RecognizeResult findRecentIcon(){
+        return $().targetX(86)
+                .checker(RecognizeChecker.X_ONLY)
+                .inSense(findInScreen("imgs/story/start_btn.png"))
+                .desc("最近图标按钮") ;
+    }
+
+    //499 19 70 23 当前体力
+
+
+    //478 84 52 24 当前远征体力
+
 }

@@ -10,7 +10,7 @@ public class HomeBooter extends BhBooter<HomeRecognizer> {
     private static boolean findCover = false;
 
     //请求封面超时时间
-    private final static long coverTimeOut = 5 * 1000 ;
+    private final static long coverTimeOut = 10 * 1000 ;
 
     private long startTime = -1 ;
 
@@ -53,7 +53,7 @@ public class HomeBooter extends BhBooter<HomeRecognizer> {
                     return toNextSense(new TaskBooter()) ;
             }
         }else {
-
+            handleCover();
         }
         return super.recognizeFrame();
     }

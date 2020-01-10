@@ -10,6 +10,7 @@ public class HomeStaminaBooter extends BhBooter<HomeStaminaRecognizer> {
         RecognizeResult getBtn = $().findGetBtn();
         if(getBtn.isFound()){
             handleClickIntent(getBtn);
+            return toBack() ;
         }
         return super.recognizeFrame();
     }
