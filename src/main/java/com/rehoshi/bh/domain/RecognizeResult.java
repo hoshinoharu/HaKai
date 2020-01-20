@@ -138,11 +138,20 @@ public class RecognizeResult {
     }
 
     public int getId() {
-        return id;
+        return id == null ? -1 : id;
     }
 
     public RecognizeResult id(Integer id) {
         this.id = id;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "RecognizeResult{" +
+                "id=" + id +
+                ", found=" + found +
+                ", inSense=" + inSense +
+                '}';
     }
 }

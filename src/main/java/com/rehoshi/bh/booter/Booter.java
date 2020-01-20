@@ -53,4 +53,7 @@ public interface Booter {
      */
     Booter getNextBooter();
 
+
+    boolean isFinish() ;
+
 }

@@ -60,15 +60,15 @@ public class BhRecognizer implements Recognizer {
             x = mmr.maxLoc.x;
             y = mmr.maxLoc.y;
         }
-        Imgproc.rectangle(templete, new Point(x, y), new Point(x + demo.cols(), y + demo.rows()), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
-        Imgproc.putText(templete, tag, new Point(x, y), Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0), 1, Imgproc.LINE_AA);
-
-        BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
-        try {
-            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() + ".png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        Imgproc.rectangle(templete, new Point(x, y), new Point(x + demo.cols(), y + demo.rows()), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
+//        Imgproc.putText(templete, tag, new Point(x, y), Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0), 1, Imgproc.LINE_AA);
+//
+//        BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
+//        try {
+//            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() + ".png"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         Rect rect = new Rect(x, y, demo.width(), demo.height());
         MatchResult matchResult = new MatchResult();
         matchResult.setMatchRect(rect);
@@ -82,14 +82,17 @@ public class BhRecognizer implements Recognizer {
         return findInScreen(imgInRes, "");
     }
 
+    final static String runtimePath = new File(BhRecognizer.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+
     public MatchResult findInScreen(String imgInRes, String info) {
         File screenAsFile = this.bhDriver.getScreenAsFile();
         String screenPath = screenAsFile.getAbsolutePath();
         if (!imgInRes.startsWith("/")) {
             imgInRes = "/" + imgInRes;
         }
-        URL resource = Resource.class.getResource(imgInRes);
-        String targetPath = resource.getPath().replaceFirst("/", "");
+        String targetPath = runtimePath + imgInRes ;
+//        URL resource = Resource.class.getResource(imgInRes);
+//        String targetPath = runtimePath + resource.getPath().replaceFirst("/", "");
         MatchResult in = findIn(targetPath, screenPath, info);
         return in;
     }
@@ -173,9 +176,11 @@ public class BhRecognizer implements Recognizer {
                 Class<?> aClass = Class.forName(idCls);
                 Field declaredField = aClass.getDeclaredField(methodName);
                 Object o = declaredField.get(aClass);
-                result.id((Integer) o) ;
-            } catch (Exception ignore) { }
+                result.id((Integer) o);
+            } catch (Exception ignore) {
+            }
         }
+        System.out.println("识别结果{ID}:" + result.getId());
         return result;
     }
 

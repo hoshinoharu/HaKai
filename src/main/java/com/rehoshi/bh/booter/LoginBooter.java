@@ -1,6 +1,7 @@
 package com.rehoshi.bh.booter;
 
 import com.rehoshi.bh.auto.Hakai;
+import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.LoginRecognizer;
 import com.rehoshi.bh.domain.RecognizeResult;
 

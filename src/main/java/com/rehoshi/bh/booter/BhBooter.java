@@ -18,6 +18,8 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     private Booter nextBooter;
 
+    private boolean finish = false;
+
     public void bindDriver(BhDriver driver) {
         this.driver = driver;
         if (this.bhRecognizer == null) {
@@ -135,5 +137,17 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     public void handleClickIntent(RecognizeResult result) {
         getDriver().click(result.getIntentRect());
+    }
+
+    public void finish(){
+        this.finish = true ;
+    }
+
+    public boolean isFinish() {
+        return finish;
+    }
+
+    protected void clickCenter(){
+        getDriver().click(new Rect(0, 0, 960, 540)) ;
     }
 }

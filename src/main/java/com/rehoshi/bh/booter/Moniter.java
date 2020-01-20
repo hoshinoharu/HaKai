@@ -8,7 +8,7 @@ public class Moniter implements Runnable {
     private BhDriver bhDriver;
     private boolean first = true;
     private boolean bootSuccess = false;
-    private Stack<Booter> booterStack = new Stack<Booter>();
+    private Stack<Booter> booterStack = new Stack<>();
     private Booter curBooter;
 
     public Moniter(Booter curBooter) {
@@ -64,15 +64,16 @@ public class Moniter implements Runnable {
                     case Booter.RecognizeStatus.TO_NEXT_SENSE:
                         this.curBooter = this.curBooter.getNextBooter();
                         break;
-                    case Booter.RecognizeStatus.TO_PRE_SENSE:
-                        //弹出当前booter
-                        this.booterStack.pop();
-                        this.curBooter = this.booterStack.peek();
-                        break;
+                }
+
+                if (Booter.RecognizeStatus.TO_PRE_SENSE == status || this.curBooter.isFinish()) {
+                    //弹出当前booter
+                    this.booterStack.pop();
+                    this.curBooter = this.booterStack.peek();
                 }
                 this.bhDriver.endFrame();
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

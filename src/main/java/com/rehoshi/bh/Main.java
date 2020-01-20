@@ -1,6 +1,5 @@
 package com.rehoshi.bh;
 
-import com.rehoshi.bh.auto.Hakai;
 import com.rehoshi.bh.booter.LoginBooter;
 import com.rehoshi.bh.booter.Moniter;
 import com.rehoshi.bh.domain.Rect;
@@ -11,23 +10,18 @@ import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import javax.annotation.Resource;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
-import java.util.UUID;
 
 public class Main {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Moniter moniter = new Moniter(new LoginBooter());
         moniter.start();
     }
@@ -90,7 +84,7 @@ public class Main {
                 final int r = (color >> 16) & 0xff;
                 final int g = (color >> 8) & 0xff;
                 final int b = color & 0xff;
-                int gray = (int) (0.3 * r + 0.59 * g + 0.11 * b);;
+                int gray = (int) (0.3 * r + 0.59 * g + 0.11 * b);
                 int newPixel = colorToRGB(255, gray, gray, gray);
                 grayImage.setRGB(i, j, newPixel);
             }

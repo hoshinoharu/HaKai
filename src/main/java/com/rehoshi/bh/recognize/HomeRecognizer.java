@@ -68,11 +68,21 @@ public class HomeRecognizer extends BhRecognizer {
                 .desc("领取月卡");
     }
 
+    @HakaiId
     public RecognizeResult findTaskHint(){
-        return  new RecognizeResult()
+        return  $()
                 .targetX(8)
                 .targetY(63)
                 .inSense(findInScreen("/imgs/home/task_hint.png"))
                 .desc("每日任务");
+    }
+
+    @HakaiId
+    public RecognizeResult findAttackBtn() {
+        return $().targetX(770)
+                .targetY(74)
+                .foundThreshold(2)
+                .inSense(findInScreen("imgs/attack/attack_btn.png"))
+                .desc("主界面出击按钮") ;
     }
 }

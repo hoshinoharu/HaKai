@@ -18,6 +18,12 @@ public interface RecognizeChecker {
     RecognizeChecker X_ONLY = result ->
             Math.abs(result.getInSense().getMatchRect().x - result.getTargetX()) <= result.getFoundThreshold();
 
+    /**
+     * 只检查y坐标的检查器
+     */
+    RecognizeChecker Y_ONLY = result ->
+            Math.abs(result.getInSense().getMatchRect().y - result.getTargetY()) <= result.getFoundThreshold();
+
     boolean check(RecognizeResult $);
 
     /**

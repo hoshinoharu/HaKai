@@ -1,5 +1,7 @@
 package com.rehoshi.bh.booter;
 
+import com.rehoshi.bh.auto.Hakai;
+import com.rehoshi.bh.booter.attack.AttackBooter;
 import com.rehoshi.bh.booter.homeland.HomeLandBooter;
 import com.rehoshi.bh.booter.task.TaskBooter;
 import com.rehoshi.bh.recognize.HomeRecognizer;
@@ -42,15 +44,17 @@ public class HomeBooter extends BhBooter<HomeRecognizer> {
 
     @Override
     public int recognizeFrame() {
-        RecognizeResult result = $h($()::findHomeLandBtn
+        RecognizeResult result = $h($()::findAttackBtn,$()::findHomeLandBtn
                 , $()::findTaskHint);
+            System.out.println(result + " " + Hakai.Id.HomeRecognizer.findAttackBtn);
         if(result.isFound()){
-            getDriver().click(result.getIntentRect()) ;
-            System.out.println(result.getDesc());
-            switch (result.getDesc()){
-                case "家园按钮":return toNextSense(new HomeLandBooter()) ;
-                case "每日任务":
-                    return toNextSense(new TaskBooter()) ;
+            switch (result.getId()){
+                case Hakai.Id.HomeRecognizer.findAttackBtn:
+                    return toNextSense(result, new AttackBooter()) ;
+                case Hakai.Id.HomeRecognizer.findTaskHint:
+                    return toNextSense(result, new TaskBooter()) ;
+                case Hakai.Id.HomeRecognizer.findHomeLandBtn:
+                    return toNextSense(result, new HomeLandBooter());
             }
         }else {
             handleCover();

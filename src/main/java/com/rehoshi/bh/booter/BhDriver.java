@@ -1,10 +1,12 @@
 package com.rehoshi.bh.booter;
 
 import com.rehoshi.bh.log.Log;
+import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
 import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Scanner;
 
 public class BhDriver {
@@ -27,13 +30,14 @@ public class BhDriver {
 
     public BhDriver() throws IOException, InterruptedException {
 
+        /*
         System.out.println("启动appium");
         //开启appium
         Process appium = Runtime.getRuntime().exec("appium.cmd -a localhost");
         Log.log(appium);
         System.out.println("appium启动完成");
         //开启adb
-        System.out.println("启动abd");
+        System.out.println("启动adb");
         Process adb = Runtime.getRuntime().exec("adb devices");
         Log.log(adb);
         System.out.println("adb启动完成");
@@ -48,9 +52,10 @@ public class BhDriver {
                 e.printStackTrace();
             }
         }).start();
-
+         */
         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "127.0.0.1:62001"); //
+//        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "127.0.0.1:62001"); //
+        desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "127.0.0.1:7555"); //
         desiredCapabilities.setCapability("platformName", "Android");
         desiredCapabilities.setCapability("appPackage", "com.miHoYo.enterprise.NGHSoD");
         desiredCapabilities.setCapability("appActivity", "com.miHoYo.overridenativeactivity.OverrideNativeActivity");
@@ -83,7 +88,7 @@ public class BhDriver {
      */
     public void endFrame() {
         if (this.screenInFrame != null) {
-            this.screenInFrame.delete();
+//            this.screenInFrame.delete();
         }
     }
 
@@ -96,7 +101,22 @@ public class BhDriver {
 
     public boolean click(Rectangle2D.Double rect) {
         TouchAction touchAction = new AndroidTouchAction(getDriver());
-        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2)))).release().perform();
+        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))))
+//                .release()
+                .perform();
+        return true;
+    }
+
+    public boolean click(Rectangle2D.Double rect, int times, long interval) {
+        TouchAction touchAction = new AndroidTouchAction(getDriver());
+        for (int i = 0; i < times; i++) {
+            if (i > 0) {
+                touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(interval)));
+            }
+        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
+        }
+//        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
+        touchAction.perform();
         return true;
     }
 
