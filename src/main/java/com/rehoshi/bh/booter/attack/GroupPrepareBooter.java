@@ -2,6 +2,7 @@ package com.rehoshi.bh.booter.attack;
 
 import com.rehoshi.bh.auto.Hakai;
 import com.rehoshi.bh.booter.BhBooter;
+import com.rehoshi.bh.booter.attack.callup.CallUpGameBooter;
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.recognize.attack.GroupPrepareRecognizer;
 

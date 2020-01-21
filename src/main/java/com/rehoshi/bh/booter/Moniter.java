@@ -51,25 +51,32 @@ public class Moniter implements Runnable {
                     if (first) {
                         //识别成功则表示初始化完成
                         first = !curBooter.recognizeSense();
-                        status = Booter.RecognizeStatus.NO_ACTION;
+                        curBooter.onRecognizeSenseFinish();
+
+                        if (curBooter.recognizeSenseTimeout()) {
+                            //识别场景错误回到上一个场景
+                            status = Booter.RecognizeStatus.TO_PRE_SENSE;
+                        } else {
+                            status = Booter.RecognizeStatus.NO_ACTION;
+                        }
                     } else {
                         //识别每一帧
                         status = curBooter.recognizeFrame();
                     }
                 }
 
+                Booter nextBooter = this.curBooter.getNextBooter();
+                if (status == Booter.RecognizeStatus.TO_PRE_SENSE || this.curBooter.isFinish()) {
+                    finishCurBooter();
+                }
                 switch (status) {
                     case Booter.RecognizeStatus.STAY_CUR_SENSE:
                         break;
                     case Booter.RecognizeStatus.TO_NEXT_SENSE:
-                        this.curBooter = this.curBooter.getNextBooter();
+                        if (nextBooter != null) {
+                            this.curBooter = nextBooter;
+                        }
                         break;
-                }
-
-                if (Booter.RecognizeStatus.TO_PRE_SENSE == status || this.curBooter.isFinish()) {
-                    //弹出当前booter
-                    this.booterStack.pop();
-                    this.curBooter = this.booterStack.peek();
                 }
                 this.bhDriver.endFrame();
                 try {
@@ -81,6 +88,16 @@ public class Moniter implements Runnable {
         } else {
             //重新启动
             this.run();
+        }
+    }
+
+    private void finishCurBooter() {
+        //弹出当前booter
+        Booter pop = this.booterStack.pop();
+        if(!this.booterStack.empty()){
+            this.curBooter = this.booterStack.peek();
+        }else {
+            this.curBooter = pop ;
         }
     }
 

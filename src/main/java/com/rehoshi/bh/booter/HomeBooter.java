@@ -43,6 +43,11 @@ public class HomeBooter extends BhBooter<HomeRecognizer> {
     }
 
     @Override
+    public int getMaxSenseRecognizeTimes() {
+        return 100;
+    }
+
+    @Override
     public int recognizeFrame() {
         RecognizeResult result = $h($()::findAttackBtn,$()::findHomeLandBtn
                 , $()::findTaskHint);

@@ -95,10 +95,11 @@ public class BhDriver {
     }
 
     public boolean click(Rectangle2D.Double rect) {
-        TouchAction touchAction = new AndroidTouchAction(getDriver());
-        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))))
-//                .release()
-                .perform();
+        try {
+            TouchAction touchAction = new AndroidTouchAction(getDriver());
+            touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))))
+                    .perform();
+        }catch (Exception e){ }
         return true;
     }
 
@@ -106,7 +107,7 @@ public class BhDriver {
         new Thread(()->{
             TouchAction touchAction = new AndroidTouchAction(getDriver());
             for (int i = 0; i < times; i++) {
-                if (i > 0) {
+                if (i > 0 && interval > 0) {
                     touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(interval)));
                 }
                 touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
@@ -116,4 +117,7 @@ public class BhDriver {
         return true;
     }
 
+    public AndroidTouchAction newTouch(){
+        return new AndroidTouchAction(getDriver()) ;
+    }
 }

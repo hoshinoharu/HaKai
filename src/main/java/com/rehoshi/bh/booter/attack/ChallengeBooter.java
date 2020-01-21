@@ -1,6 +1,7 @@
 package com.rehoshi.bh.booter.attack;
 
 import com.rehoshi.bh.booter.BhBooter;
+import com.rehoshi.bh.booter.attack.callup.CallUpBooter;
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.recognize.attack.ChallengeRecognizer;
 

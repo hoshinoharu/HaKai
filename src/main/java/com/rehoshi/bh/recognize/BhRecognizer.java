@@ -7,25 +7,32 @@ import com.rehoshi.bh.checker.RecognizeChecker;
 import com.rehoshi.bh.domain.MatchResult;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.domain.RecognizeResult;
+import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 
 public class BhRecognizer implements Recognizer {
 
     private BhDriver bhDriver;
+    private boolean debug = true;
 
     public void bindDriver(BhDriver driver) {
         this.bhDriver = driver;
+        deployResource();
     }
 
     public MatchResult findIn(String target, String sense) {
@@ -60,15 +67,17 @@ public class BhRecognizer implements Recognizer {
             x = mmr.maxLoc.x;
             y = mmr.maxLoc.y;
         }
-//        Imgproc.rectangle(templete, new Point(x, y), new Point(x + demo.cols(), y + demo.rows()), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
-//        Imgproc.putText(templete, tag, new Point(x, y), Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0), 1, Imgproc.LINE_AA);
-//
-//        BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
-//        try {
-//            ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() + ".png"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        if(debug){
+            Imgproc.rectangle(templete, new Point(x, y), new Point(x + demo.cols(), y + demo.rows()), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
+            Imgproc.putText(templete, tag, new Point(x, y), Imgproc.FONT_HERSHEY_SCRIPT_COMPLEX, 1.0, new Scalar(0, 255, 0), 1, Imgproc.LINE_AA);
+
+            BufferedImage image = (BufferedImage) HighGui.toBufferedImage(templete);
+            try {
+                ImageIO.write(image, "png", new FileOutputStream("D:\\HakiOut\\" + System.currentTimeMillis() + ".png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         Rect rect = new Rect(x, y, demo.width(), demo.height());
         MatchResult matchResult = new MatchResult();
         matchResult.setMatchRect(rect);
@@ -82,7 +91,7 @@ public class BhRecognizer implements Recognizer {
         return findInScreen(imgInRes, "");
     }
 
-    final static String runtimePath = new File(BhRecognizer.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+    private final static String runtimePath = getRuntimePath() ;
 
     public MatchResult findInScreen(String imgInRes, String info) {
         File screenAsFile = this.bhDriver.getScreenAsFile();
@@ -91,10 +100,62 @@ public class BhRecognizer implements Recognizer {
             imgInRes = "/" + imgInRes;
         }
         String targetPath = runtimePath + imgInRes ;
-//        URL resource = Resource.class.getResource(imgInRes);
-//        String targetPath = runtimePath + resource.getPath().replaceFirst("/", "");
         MatchResult in = findIn(targetPath, screenPath, info);
         return in;
+    }
+
+    private static String getRuntimePath(){
+        String runtimePath ;
+        String path = BhRecognizer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        File root = new File(path) ;
+        runtimePath = root.getParent() ;
+        return runtimePath;
+    }
+
+    public void deployResource(){
+        deployImgs();
+    }
+
+
+    /**
+     * 自动复制jar包中的资源到jar包的根目录
+     */
+    private void deployImgs(){
+        File imgsRoot = new File(runtimePath, "imgs") ;
+        if(imgsRoot.exists()){//清除之前的缓存
+            imgsRoot.delete() ;
+        }
+        imgsRoot.mkdirs() ;//创建目录
+
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver() ;
+        try {
+            //获取所有的img资源
+            Resource[] resources = resolver.getResources("classpath*:imgs/**");
+            String rootPath = BhRecognizer.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            if(resources != null){
+                Arrays.asList(resources).forEach(resource -> {
+                    try {
+                        URL url = resource.getURL();
+                        String resPath = url.getPath() ;
+                        String relativePath ;
+                        if(rootPath.endsWith(".jar")){
+                            String jarPath = "file:" + rootPath + "!/imgs" ;
+                            relativePath = resPath.replace(jarPath, "") ;
+                        }else {
+                            relativePath = resPath.replace(rootPath+"imgs", "") ;
+                        }
+                        if(resource.isReadable()){
+                            FileUtils.copyInputStreamToFile(resource.getInputStream(), new File(imgsRoot, relativePath));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @HakaiId

@@ -56,4 +56,7 @@ public interface Booter {
 
     boolean isFinish() ;
 
+    boolean recognizeSenseTimeout() ;
+
+    void onRecognizeSenseFinish() ;
 }

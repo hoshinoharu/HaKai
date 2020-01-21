@@ -20,6 +20,23 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     private boolean finish = false;
 
+    /**
+     *识别场景最大次数
+     */
+    private int curSenseRecognizeTimes  ;
+
+    public void addSenseRecognizeTimes(){
+        this.curSenseRecognizeTimes ++ ;
+    }
+
+    public int getCurSenseRecognizeTimes() {
+        return curSenseRecognizeTimes;
+    }
+
+    public int getMaxSenseRecognizeTimes() {
+        return 2;
+    }
+
     public void bindDriver(BhDriver driver) {
         this.driver = driver;
         if (this.bhRecognizer == null) {
@@ -32,6 +49,7 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
             }
         }
         this.bhRecognizer.bindDriver(driver);
+        this.curSenseRecognizeTimes = 0 ;
     }
 
     public BhDriver getDriver() {
@@ -149,5 +167,15 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
 
     protected void clickCenter(){
         getDriver().click(new Rect(0, 0, 960, 540)) ;
+    }
+
+    @Override
+    public boolean recognizeSenseTimeout() {
+        return getCurSenseRecognizeTimes() > getMaxSenseRecognizeTimes();
+    }
+
+    @Override
+    public void onRecognizeSenseFinish() {
+        addSenseRecognizeTimes();
     }
 }

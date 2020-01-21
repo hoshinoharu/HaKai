@@ -7,6 +7,12 @@ import com.rehoshi.bh.recognize.attack.GroupMatchRecognizer;
 public class GroupMatchBooter extends BhBooter<GroupMatchRecognizer> {
 
     @Override
+    public boolean recognizeSense() {
+        RecognizeResult matchTitle = $().findMatchTitle();
+        return matchTitle.isFound();
+    }
+
+    @Override
     public int recognizeFrame() {
         RecognizeResult startMatch = $().findStartMatch();
         if (startMatch.isFound()) {
