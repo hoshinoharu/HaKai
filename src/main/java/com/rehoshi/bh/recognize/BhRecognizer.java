@@ -5,8 +5,8 @@ import com.rehoshi.bh.auto.HakaiId;
 import com.rehoshi.bh.booter.BhDriver;
 import com.rehoshi.bh.checker.RecognizeChecker;
 import com.rehoshi.bh.domain.MatchResult;
-import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.domain.RecognizeResult;
+import com.rehoshi.bh.domain.Rect;
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
@@ -20,15 +20,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.net.JarURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
 public class BhRecognizer implements Recognizer {
 
     private BhDriver bhDriver;
-    private boolean debug = true;
+    private boolean debug = false;
 
     public void bindDriver(BhDriver driver) {
         this.bhDriver = driver;

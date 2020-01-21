@@ -9,7 +9,7 @@ public class GroupMatchRecognizer extends BhRecognizer {
     public RecognizeResult findMatchTitle(){
         return $().targetX(31)
                 .targetY(68)
-                .inSense(findInScreen("imgs/attack/call_up_match_title.png"))
+                .inSense(findInScreen("imgs/attack/call_up_match_title_ex.png"))
                 .desc("征召匹配标题") ;
     }
 

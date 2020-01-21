@@ -46,7 +46,7 @@ public class CallUpRecognizer extends StrictRecognizer {
     public RecognizeResult findCallUpTitle(){
         return $().targetX(8)
                 .targetY(60)
-                .inSense(findInScreen("imgs/attack/call_up_title.png"))
+                .inSense(findInScreen("imgs/attack/call_up_title_ex.png"))
                 .intentRect(new Rect(537, 229, 124, 114))//设置点击区域
                 .desc("征召关卡标题");
     }

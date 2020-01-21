@@ -1,14 +1,11 @@
 package com.rehoshi.bh.booter.attack.callup;
 
 import com.rehoshi.bh.auto.Hakai;
-import com.rehoshi.bh.booter.BhBooter;
 import com.rehoshi.bh.booter.attack.FollowBooter;
 import com.rehoshi.bh.booter.attack.GameBooter;
 import com.rehoshi.bh.controller.CharacterController;
-import com.rehoshi.bh.controller.GameController;
-import com.rehoshi.bh.controller.fuhua.ShadowRider;
+import com.rehoshi.bh.controller.seeie.OtherShoreTwins;
 import com.rehoshi.bh.domain.RecognizeResult;
-import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.recognize.attack.CallUpGameRecognizer;
 
 public class CallUpGameBooter extends GameBooter<CallUpGameRecognizer> {
@@ -39,6 +36,6 @@ public class CallUpGameBooter extends GameBooter<CallUpGameRecognizer> {
 
     @Override
     protected CharacterController initCharacterController() {
-        return new ShadowRider();
+        return new OtherShoreTwins();
     }
 }

@@ -1,6 +1,5 @@
 package com.rehoshi.bh.controller;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import com.rehoshi.bh.booter.BhDriver;
 import com.rehoshi.bh.controller.command.ClickCommand;
 import com.rehoshi.bh.controller.command.GameCommand;
@@ -43,14 +42,14 @@ public abstract class CharacterController implements GameController {
             GameCommand next = iterator.next();
             if(!first){
                 //多个命令间隔
-                androidTouchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300))) ;
+                androidTouchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(200))) ;
             }else {
                 first = false ;
             }
             next.attach2TouchAction(androidTouchAction);
         }
         try {
-            androidTouchAction.perform();
+            new Thread(androidTouchAction::perform).start();
         }catch (Exception e){
         }
         commandCache.clear();

@@ -27,7 +27,7 @@ public abstract class TouchCommand implements GameCommand {
         for (int i= 0; i < times; i ++){
             if(i > 0){
                 //按键间隔
-                touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300))) ;
+                touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(200))) ;
             }
             attachPoint2Touch(point, touchAction);
         }

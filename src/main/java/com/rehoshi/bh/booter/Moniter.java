@@ -1,6 +1,5 @@
 package com.rehoshi.bh.booter;
 
-import java.net.MalformedURLException;
 import java.util.Stack;
 
 public class Moniter implements Runnable {
@@ -53,9 +52,10 @@ public class Moniter implements Runnable {
                         first = !curBooter.recognizeSense();
                         curBooter.onRecognizeSenseFinish();
 
-                        if (curBooter.recognizeSenseTimeout()) {
+                        if (first && curBooter.recognizeSenseTimeout()) {
                             //识别场景错误回到上一个场景
                             status = Booter.RecognizeStatus.TO_PRE_SENSE;
+                            System.out.println("识别当前场景失败");
                         } else {
                             status = Booter.RecognizeStatus.NO_ACTION;
                         }
@@ -67,6 +67,7 @@ public class Moniter implements Runnable {
 
                 Booter nextBooter = this.curBooter.getNextBooter();
                 if (status == Booter.RecognizeStatus.TO_PRE_SENSE || this.curBooter.isFinish()) {
+                    System.out.println("结束当前Booter {status}" + status + " {finish}" + this.curBooter.isFinish());
                     finishCurBooter();
                 }
                 switch (status) {
