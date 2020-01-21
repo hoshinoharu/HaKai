@@ -4,6 +4,7 @@ import com.rehoshi.bh.booter.LoginBooter;
 import com.rehoshi.bh.booter.Moniter;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.orc.Ocer;
+
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.highgui.HighGui;

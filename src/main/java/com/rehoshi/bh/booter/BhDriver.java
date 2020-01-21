@@ -1,7 +1,5 @@
 package com.rehoshi.bh.booter;
 
-import com.rehoshi.bh.log.Log;
-import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidTouchAction;
@@ -15,11 +13,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Scanner;
 
 public class BhDriver {
     /**
@@ -108,15 +103,16 @@ public class BhDriver {
     }
 
     public boolean click(Rectangle2D.Double rect, int times, long interval) {
-        TouchAction touchAction = new AndroidTouchAction(getDriver());
-        for (int i = 0; i < times; i++) {
-            if (i > 0) {
-                touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(interval)));
+        new Thread(()->{
+            TouchAction touchAction = new AndroidTouchAction(getDriver());
+            for (int i = 0; i < times; i++) {
+                if (i > 0) {
+                    touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(interval)));
+                }
+                touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
             }
-        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
-        }
-//        touchAction.tap(PointOption.point(new Point((int) (rect.x + rect.width / 2), (int) (rect.y + rect.height / 2))));
-        touchAction.perform();
+            touchAction.perform();
+        }).start();
         return true;
     }
 

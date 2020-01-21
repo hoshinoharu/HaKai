@@ -11,7 +11,7 @@ public class CallUpGameRecognizer extends StrictRecognizer {
     public RecognizeResult findAttackBtn(){
         return $().targetX(840)
                 .targetY(430)
-                .inSense(findInScreen("imgs/attack/btn_a.png"))
+                .inSense(findInScreen("imgs/attack/seeie_attack_a.png"))
                 .desc("普通攻击") ;
     }
 
