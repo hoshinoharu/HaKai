@@ -2,13 +2,15 @@ package com.rehoshi.bh.driver;
 
 import com.rehoshi.bh.controller.action.BhTouchAction;
 import com.rehoshi.bh.domain.Rect;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 
 public interface BhDriver {
 
-    String APP_PACKAGE = "com.miHoYo.enterprise.NGHSoD" ;
-    String APP_ACTIVITY = "com.miHoYo.overridenativeactivity.OverrideNativeActivity" ;
+    String APP_PACKAGE = "com.miHoYo.enterprise.NGHSoD";
+    String APP_ACTIVITY = "com.miHoYo.overridenativeactivity.OverrideNativeActivity";
 
     void connectTarget(String host, int port) throws Exception;
 
@@ -20,9 +22,8 @@ public interface BhDriver {
 
     default boolean click(Rect rect) {
         BhTouchAction touchAction = newTouch();
-        touchAction.tap(rect.center())
+        return touchAction.tap(rect.center())
                 .perform();
-        return true;
     }
 
     default boolean click(Rect rect, int times, long interval) {
@@ -33,13 +34,13 @@ public interface BhDriver {
             }
             touchAction.tap(rect.center());
         }
-        touchAction.perform();
-        return true;
+
+        return touchAction.perform();
     }
 
 
     BhTouchAction newTouch();
 
-    String getTargetDevices() ;
+    String getTargetDevices();
 
 }

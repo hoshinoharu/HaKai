@@ -2,8 +2,11 @@ package com.rehoshi.bh;
 
 import com.rehoshi.bh.booter.LoginBooter;
 import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.driver.AdbDriver;
+import com.rehoshi.bh.log.Log;
 import com.rehoshi.bh.orc.Ocer;
 
+import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.highgui.HighGui;
@@ -24,6 +27,12 @@ public class Main {
     public static void main(String[] args) {
         Moniter moniter = new Moniter(new LoginBooter());
         moniter.start();
+//        AdbDriver adbDriver = new AdbDriver();
+//        try {
+//            adbDriver.connectTarget("127.0.0.1", 7555);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 

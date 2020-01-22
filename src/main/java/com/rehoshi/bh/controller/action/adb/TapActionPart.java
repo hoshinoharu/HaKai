@@ -14,5 +14,6 @@ public class TapActionPart extends BaseActionPart {
     @Override
     public void execute(AdbTouchAction touchAction) {
         String s = tap(point);
+        touchAction.addCommand(s);
     }
 }

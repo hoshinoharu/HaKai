@@ -7,15 +7,13 @@ public class LongPressActionPart extends BaseActionPart {
 
     private Point point ;
 
-    private long duration ;
-
-    public LongPressActionPart(Point point, long duration) {
+    public LongPressActionPart(Point point) {
         this.point = point;
-        this.duration = duration;
     }
 
     @Override
     public void execute(AdbTouchAction touchAction) {
-        String s = longPress(point, duration);
+        String s = longPress(point);
+        touchAction.addCommand(s);
     }
 }
