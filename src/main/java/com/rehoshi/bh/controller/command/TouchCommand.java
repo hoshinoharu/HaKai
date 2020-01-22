@@ -1,11 +1,7 @@
 package com.rehoshi.bh.controller.command;
 
-import io.appium.java_client.android.AndroidTouchAction;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
-
-import java.awt.*;
-import java.time.Duration;
+import com.rehoshi.bh.controller.action.BhTouchAction;
+import com.rehoshi.bh.domain.Point;
 
 /**
  * 触摸命令
@@ -22,16 +18,15 @@ public abstract class TouchCommand implements GameCommand {
     }
 
     @Override
-    public void attach2TouchAction(AndroidTouchAction touchAction) {
-        PointOption point = PointOption.point(touchPoint.x, touchPoint.y);
+    public void attach2TouchAction(BhTouchAction touchAction) {
         for (int i= 0; i < times; i ++){
             if(i > 0){
                 //按键间隔
-                touchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(200))) ;
+                touchAction.waitAction(200) ;
             }
-            attachPoint2Touch(point, touchAction);
+            attachPoint2Touch(touchPoint, touchAction);
         }
     }
 
-    protected abstract void attachPoint2Touch(PointOption point, AndroidTouchAction touchAction);
+    protected abstract void attachPoint2Touch(Point point, BhTouchAction touchAction);
 }

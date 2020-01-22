@@ -1,4 +1,8 @@
-package com.rehoshi.bh.booter;
+package com.rehoshi.bh;
+
+import com.rehoshi.bh.booter.Booter;
+import com.rehoshi.bh.driver.AppiumDriver;
+import com.rehoshi.bh.driver.BhDriver;
 
 import java.util.Stack;
 
@@ -20,7 +24,8 @@ public class Moniter implements Runnable {
                 throw new RuntimeException("Only can run once");
             }
             try {
-                this.bhDriver = new BhDriver();
+                this.bhDriver = new AppiumDriver();
+                this.bhDriver.connectTarget("127.0.0.1", 7555);
                 bootSuccess = true;
             } catch (Exception e) {
                 e.printStackTrace();

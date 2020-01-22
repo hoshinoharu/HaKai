@@ -1,10 +1,10 @@
 package com.rehoshi.bh.controller;
 
-import com.rehoshi.bh.booter.BhDriver;
+import com.rehoshi.bh.controller.action.BhTouchAction;
+import com.rehoshi.bh.driver.BhDriver;
 import com.rehoshi.bh.controller.command.ClickCommand;
 import com.rehoshi.bh.controller.command.GameCommand;
 import com.rehoshi.bh.controller.command.LongPressCommand;
-import io.appium.java_client.android.AndroidTouchAction;
 import io.appium.java_client.touch.WaitOptions;
 
 import java.time.Duration;
@@ -35,21 +35,21 @@ public abstract class CharacterController implements GameController {
 
     @Override
     public void publish(BhDriver bhDriver) {
-        AndroidTouchAction androidTouchAction = bhDriver.newTouch();
+        BhTouchAction bhTouchAction = bhDriver.newTouch();
         boolean first = true ;
         Iterator<GameCommand> iterator = commandCache.iterator();
         while (iterator.hasNext()){
             GameCommand next = iterator.next();
             if(!first){
                 //多个命令间隔
-                androidTouchAction.waitAction(WaitOptions.waitOptions(Duration.ofMillis(200))) ;
+                bhTouchAction.waitAction(200) ;
             }else {
                 first = false ;
             }
-            next.attach2TouchAction(androidTouchAction);
+            next.attach2TouchAction(bhTouchAction);
         }
         try {
-            new Thread(androidTouchAction::perform).start();
+            new Thread(bhTouchAction::perform).start();
         }catch (Exception e){
         }
         commandCache.clear();

@@ -2,6 +2,7 @@ package com.rehoshi.bh.booter;
 
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.driver.BhDriver;
 import com.rehoshi.bh.recognize.BhRecognizer;
 
 import java.io.File;
@@ -75,7 +76,6 @@ public abstract class BhBooter<R extends BhRecognizer> implements Booter {
     protected Supplier<RecognizeResult> $s_h(Supplier<RecognizeResult>... supplier) {
         return () -> $s(supplier);
     }
-
 
     /**
      * 找到所有识别结果中最匹配的结果

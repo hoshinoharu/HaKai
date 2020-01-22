@@ -2,11 +2,11 @@ package com.rehoshi.bh.recognize;
 
 import com.rehoshi.bh.auto.Hakai;
 import com.rehoshi.bh.auto.HakaiId;
-import com.rehoshi.bh.booter.BhDriver;
 import com.rehoshi.bh.checker.RecognizeChecker;
 import com.rehoshi.bh.domain.MatchResult;
 import com.rehoshi.bh.domain.RecognizeResult;
 import com.rehoshi.bh.domain.Rect;
+import com.rehoshi.bh.driver.BhDriver;
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;

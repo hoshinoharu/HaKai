@@ -29,6 +29,6 @@ public class Rect extends Rectangle2D.Double {
     }
 
     public Point center(){
-        return new Point((int) (this.x + this.width / 2), (int) (this.y + this.height / 2));
+        return new Point(this.x + this.width / 2, this.y + this.height / 2);
     }
 }

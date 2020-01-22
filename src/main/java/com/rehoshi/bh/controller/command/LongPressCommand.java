@@ -1,9 +1,9 @@
 package com.rehoshi.bh.controller.command;
 
+import com.rehoshi.bh.controller.action.BhTouchAction;
+import com.rehoshi.bh.domain.Point;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.util.IconLocation;
-import io.appium.java_client.android.AndroidTouchAction;
-import io.appium.java_client.touch.offset.PointOption;
 
 /**
  * 长按命令
@@ -29,7 +29,7 @@ public class LongPressCommand extends TouchCommand {
     }
 
     @Override
-    protected void attachPoint2Touch(PointOption point, AndroidTouchAction touchAction) {
+    protected void attachPoint2Touch(Point point, BhTouchAction touchAction) {
         touchAction.longPress(point) ;
     }
 

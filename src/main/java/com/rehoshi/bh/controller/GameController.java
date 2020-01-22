@@ -1,6 +1,7 @@
 package com.rehoshi.bh.controller;
 
-import com.rehoshi.bh.booter.BhDriver;
+
+import com.rehoshi.bh.driver.BhDriver;
 
 public interface GameController {
     /**

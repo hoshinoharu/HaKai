@@ -1,5 +1,7 @@
 package com.rehoshi.bh.booter;
 
+import com.rehoshi.bh.driver.BhDriver;
+
 public interface Booter {
     interface RecognizeStatus {
 

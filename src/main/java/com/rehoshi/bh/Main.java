@@ -1,7 +1,6 @@
 package com.rehoshi.bh;
 
 import com.rehoshi.bh.booter.LoginBooter;
-import com.rehoshi.bh.booter.Moniter;
 import com.rehoshi.bh.domain.Rect;
 import com.rehoshi.bh.orc.Ocer;
 
