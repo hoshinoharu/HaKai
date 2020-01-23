@@ -17,6 +17,7 @@ public class AdbDriver implements BhDriver {
     private File screenInFrame;
     private String host;
     private int port;
+    private String tempDir = "D:/HakaiTemp";
 
     @Override
     public void connectTarget(String host, int port) throws Exception {
@@ -37,9 +38,10 @@ public class AdbDriver implements BhDriver {
         }
 
         File file = new File("D:/HakaiTemp");
-        if (!file.exists()) {
-            file.mkdirs();
+        if (file.exists()) {
+            file.delete() ;
         }
+        file.mkdirs();
     }
 
     @Override
@@ -56,14 +58,14 @@ public class AdbDriver implements BhDriver {
 
     @Override
     public File getScreenAsFile() {
-        if(screenInFrame == null){
-            screenInFrame = screenShot() ;
+        if (screenInFrame == null) {
+            screenInFrame = screenShot();
         }
-        return screenInFrame ;
+        return screenInFrame;
     }
 
-    private File screenShot(){
-        String fileName = String.format("D:/HakaiTemp/%d.png", System.nanoTime()) ;
+    private File screenShot() {
+        String fileName = String.format("%s/%d.png", tempDir, System.nanoTime());
         File file = new File(fileName);
         try {
             Process exec = Runtime.getRuntime().exec("adb exec-out screencap -p");
